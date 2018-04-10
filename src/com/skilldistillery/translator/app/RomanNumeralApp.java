@@ -13,26 +13,9 @@ public class RomanNumeralApp {
 		Scanner kb = new Scanner(System.in);
 
 		System.out.println("WELCOME TO ROMAN NUMERAL TRANSLATOR!");
-		int userInput;
-
-		System.out.println("Choose between Arabic-Roman conversion and Roman-Arabic conversion: (1/2)");
-		userInput = kb.nextInt();
-		
-		switch (userInput) {
-		case 1:
-			System.out.println("Input an Arabic numeral:");
-			String arabicNum = kb.next();
-			System.out.println(plt.translateWord(arabicNum));
-			break;
-		case 2:
-			System.out.println("Input an Roman numeral:");
-			String romanNum = kb.next();
-			System.out.println(plt.translateText(romanNum));
-			break;
-		default:
-			break;
-		}
-		
+		System.out.println("Input an Arabic numeral:");
+		String arabicNum = kb.next();
+		System.out.println(plt.translateNumeral(arabicNum));
 
 		kb.close();
 	}

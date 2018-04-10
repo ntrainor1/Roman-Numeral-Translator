@@ -1,115 +1,55 @@
 package com.skilldistillery.translator.app;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RomanNumeralTranslatorImpl implements Translator {
 	HashMap<Integer, String> ones = new HashMap<>();
 	HashMap<Integer, String> tens = new HashMap<>();
 	HashMap<Integer, String> hundreds = new HashMap<>();
 	HashMap<Integer, String> thousands = new HashMap<>();
-	HashMap<Integer, String> tenthousands = new HashMap<>();
-	HashMap<Integer, String> hunthousands = new HashMap<>();
-	HashMap<Integer, String> millions = new HashMap<>();
-	HashMap<String, Integer> toArabicOnes = new HashMap<>();
-	HashMap<String, Integer> toArabicTens = new HashMap<>();
-	HashMap<String, Integer> toArabicHuns = new HashMap<>();
 
 	@Override
-	public String translateWord(String untranslatedWord) {
+	public String translateNumeral(String untranslatedNumeral) {
 		ArrayList<String> reversedNumber = new ArrayList<String>();
 		StringBuilder newRomanNumeral = new StringBuilder();
-		
+
 		try {
-			int newNumeral = Integer.parseInt(untranslatedWord);
+			int newNumeral = Integer.parseInt(untranslatedNumeral);
 		} catch (NumberFormatException e) {
-			return untranslatedWord;
+			return untranslatedNumeral;
 		}
-		
+
 		populateHashMaps();
-		
-		char[] brokenWord = new char[untranslatedWord.length()];
-		
-		for (int i = 0; i < untranslatedWord.length(); i++) {
-			brokenWord[i] = untranslatedWord.charAt(i);
+
+		char[] brokenWord = new char[untranslatedNumeral.length()];
+
+		for (int i = 0; i < untranslatedNumeral.length(); i++) {
+			brokenWord[i] = untranslatedNumeral.charAt(i);
 		}
-		
-		char onesPlace = brokenWord[untranslatedWord.length() - 1];
+
+		char onesPlace = brokenWord[untranslatedNumeral.length() - 1];
 		reversedNumber.add(ones.get(Character.getNumericValue(onesPlace)));
-		
+
 		try {
-			char tensPlace = brokenWord[untranslatedWord.length() - 2];
+			char tensPlace = brokenWord[untranslatedNumeral.length() - 2];
 			reversedNumber.add(tens.get(Character.getNumericValue(tensPlace)));
 		} catch (ArrayIndexOutOfBoundsException e) {
 			reversedNumber.add("");
 		}
-		
+
 		try {
-			char hundredsPlace = brokenWord[untranslatedWord.length() - 3];
+			char hundredsPlace = brokenWord[untranslatedNumeral.length() - 3];
 			reversedNumber.add(hundreds.get(Character.getNumericValue(hundredsPlace)));
 		} catch (ArrayIndexOutOfBoundsException e) {
 			reversedNumber.add("");
 		}
-		
+
 		for (int i = (reversedNumber.size() - 1); i >= 0; i--) {
 			newRomanNumeral.append(reversedNumber.get(i));
 		}
-		
+
 		return newRomanNumeral.toString().trim();
-	}
-
-	@Override
-	public String translateText(String untranslatedText) {
-		StringBuilder sb = new StringBuilder();
-
-		populateHashMaps2();
-
-//		StringReader sr = new StringReader(untranslatedText);
-		String rNumeral = "(C*?D?C*M?)(X*?L?X*C?)(I*?V?I*X?)";
-		Pattern p = Pattern.compile(rNumeral);
-		Matcher m = p.matcher(untranslatedText);
-		
-		String onesPlace = m.group(3);
-		String tensPlace = m.group(2);
-		String hunsPlace = m.group(1);
-		
-		sb.append(toArabicHuns.get(hunsPlace));
-		sb.append(toArabicTens.get(tensPlace));
-		sb.append(toArabicOnes.get(onesPlace));
-		
-		return sb.toString().trim();
-	}
-
-	public void populateHashMaps2() {
-		populateHashMaps();
-
-		Set<Integer> keySetOnes = ones.keySet();
-		Set<Integer> keySetTens = tens.keySet();
-		Set<Integer> keySetHuns = hundreds.keySet();
-
-		Iterator<Integer> iterOne = keySetOnes.iterator();
-		Iterator<Integer> iterTens = keySetTens.iterator();
-		Iterator<Integer> iterHuns = keySetHuns.iterator();
-
-		while (iterOne.hasNext()) {
-			Integer variable = iterOne.next();
-			toArabicOnes.put(ones.get(variable), variable);
-		}
-
-		while (iterTens.hasNext()) {
-			Integer variable = iterTens.next();
-			toArabicTens.put(ones.get(variable), variable);
-		}
-
-		while (iterHuns.hasNext()) {
-			Integer variable = iterHuns.next();
-			toArabicHuns.put(ones.get(variable), variable);
-		}
 	}
 
 	public void populateHashMaps() {
@@ -156,27 +96,5 @@ public class RomanNumeralTranslatorImpl implements Translator {
 		thousands.put(8, "LXXX");
 		thousands.put(9, "XC");
 		thousands.put(0, "");
-
-		tenthousands.put(1, "\u2182");
-		tenthousands.put(2, "XX");
-		tenthousands.put(3, "XXX");
-		tenthousands.put(4, "XL");
-		tenthousands.put(5, "L");
-		tenthousands.put(6, "LX");
-		tenthousands.put(7, "LXX");
-		tenthousands.put(8, "LXXX");
-		tenthousands.put(9, "XC");
-		tenthousands.put(0, "");
-
-		hunthousands.put(1, "X");
-		hunthousands.put(2, "XX");
-		hunthousands.put(3, "XXX");
-		hunthousands.put(4, "XL");
-		hunthousands.put(5, "L");
-		hunthousands.put(6, "LX");
-		hunthousands.put(7, "LXX");
-		hunthousands.put(8, "LXXX");
-		hunthousands.put(9, "XC");
-		hunthousands.put(0, "");
 	}
 }
